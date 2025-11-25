@@ -1,0 +1,297 @@
+//Aplikasi Keuangan Mahasiswa
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+//Struktur data variabel record
+//Variabel record untuk menyimpan data-data input transaksi
+struct transaksi {
+	int nominal;
+	char posAnggaran[13];
+	int ID;
+	char jenis[12];
+	char deskripsi[50];
+	char tanggal[11];
+};
+//Variabel record untuk menyimpan data-data pos anggaran
+struct posAnggaran {
+	int totalNominal;
+	int batasPengeluaran;
+	char posAnggaran[13];
+	char status[11];
+};
+//Spesifikasi modul-modul
+//Procedure untuk memberikan nilai awal pada variabel record transaksi
+void inisialisasiTransaksi(struct transaksi transaksiMhs[], int indeks){
+	//Loop untuk inisialisasi variabel record
+		int i;
+		for (i = 0; i < 30; i++){
+		transaksiMhs[i].nominal = 0;
+		transaksiMhs[i].ID = 0;
+		strcpy(transaksiMhs[i].posAnggaran, "Kosong");
+		strcpy(transaksiMhs[i].jenis, "Kosong");
+		strcpy(transaksiMhs[i].deskripsi, "Kosong");
+		strcpy(transaksiMhs[i].tanggal, "Kosong");
+	}
+}
+//Procedure untuk memberikan nilai awal pada variabel record posAnggaran
+void inisialisasiPosAnggaran(struct posAnggaran posAnggaranMhs[], int indeks){
+	int i;
+	for (i = 0; i < 5; i++){
+		posAnggaranMhs[i].totalNominal = 0;
+		posAnggaranMhs[i].batasPengeluaran = 0;
+		strcpy(posAnggaranMhs[i].posAnggaran, "Kosong");
+		strcpy(posAnggaranMhs[i].status, "Kosong");
+	}
+}
+//Procedure untuk memberikan nama pos anggaran di variabel record pos anggaran
+void golonganPosAnggaran(struct posAnggaran posAnggaranMhs[], int indeks){
+	if (indeks == 0){
+		strcpy(posAnggaranMhs[indeks].posAnggaran, "makan" );
+	}
+	if (indeks == 1){
+		strcpy(posAnggaranMhs[indeks].posAnggaran, "transportasi" );
+	}
+	if (indeks == 2){
+		strcpy(posAnggaranMhs[indeks].posAnggaran, "hiburan" );
+	}
+	if (indeks == 3){
+		strcpy(posAnggaranMhs[indeks].posAnggaran, "tugas" );
+	}
+	if (indeks == 4){
+		strcpy(posAnggaranMhs[indeks].posAnggaran, "lainnya" );
+	}
+}
+//Procedure untuk input batas pengeluaran
+void inputBatasPengeluaran(struct posAnggaran posAnggaranMhs[], int indeks){
+	if (strcmp(posAnggaranMhs[indeks].posAnggaran, "makan") == 0) {
+		printf("\nMasukkan batas nominal total pengeluaran makan : ");
+		scanf("%d", &posAnggaranMhs[indeks].batasPengeluaran);
+	}
+	if (strcmp(posAnggaranMhs[indeks].posAnggaran, "transportasi") == 0) {
+		printf("Masukkan batas nominal total pengeluaran transportasi : ");
+		scanf("%d", &posAnggaranMhs[indeks].batasPengeluaran);
+	}
+	if (strcmp(posAnggaranMhs[indeks].posAnggaran, "hiburan") == 0) {
+		printf("Masukkan batas nominal total pengeluaran hiburan : ");
+		scanf("%d", &posAnggaranMhs[indeks].batasPengeluaran);
+	}
+	if (strcmp(posAnggaranMhs[indeks].posAnggaran, "tugas") == 0) {
+		printf("Masukkan batas nominal total pengeluaran tugas : ");
+		scanf("%d", &posAnggaranMhs[indeks].batasPengeluaran);
+	}
+	if (strcmp(posAnggaranMhs[indeks].posAnggaran, "lainnya") == 0) {
+		printf("Masukkan batas nominal total pengeluaran lainnya : ");
+		scanf("%d", &posAnggaranMhs[indeks].batasPengeluaran);
+	}
+}
+//Procedure untuk input jumlah transaksi
+void inputjmlTransaksi(int *varJmlTransaksi){
+	do {
+		printf("\nMasukkan jumlah aktivitas transaksi : ");
+		scanf("%d", varJmlTransaksi);
+		while (getchar() != '\n');
+		if (*varJmlTransaksi < 0 || *varJmlTransaksi > 30){
+			printf("Input tidak boleh kurang dari 0 atau lebih dari 30! Coba lagi!\n\n");
+		}
+	} while (*varJmlTransaksi < 0 || *varJmlTransaksi > 30);
+}
+//Procedure untuk mengisi tanggal
+void inputTanggal(struct transaksi transaksiMhs[], int indeks){
+	printf("\nMasukan tanggal transaksi (Hari/Bulan/Tahun) : ");
+	fgets(transaksiMhs[indeks].tanggal, sizeof(transaksiMhs[indeks].tanggal), stdin);
+	while (getchar() != '\n');
+}
+//Procedure untuk input nama pos anggaran
+void inputPosAnggaran(struct transaksi transaksiMhs[], int indeks){
+	char varPosAnggaran[13];
+	int i = 0;
+	printf("Masukkan nama pos anggaran (pemasukan untuk jenis pemasukan, makan/transportasi/hiburan/tugas/lainnya untuk jenis pengeluaran) : ");
+	fgets(varPosAnggaran, sizeof(varPosAnggaran), stdin);
+	varPosAnggaran[strcspn(varPosAnggaran, "\n")] = '\0';
+	while (varPosAnggaran[i] != '\0'){
+		varPosAnggaran[i] = tolower(varPosAnggaran[i]);
+		i++;
+	}
+	strcpy(transaksiMhs[indeks].posAnggaran, varPosAnggaran);
+}
+
+//Procedure untuk input jumlah nominal
+void inputNominal(struct transaksi transaksiMhs[], int indeks){
+	int varNominal;
+	do {
+		printf("Masukkan jumlah nominal (jangan menggunakan titik/koma) : ");
+		scanf("%d", &varNominal);
+		while (getchar() != '\n');
+		if (varNominal < 0){
+			printf("Input tidak boleh kurang dari 0! Coba lagi!\n\n");
+		}
+	} while (varNominal < 0);
+	transaksiMhs[indeks].nominal = varNominal;
+}
+//Procedure untuk menggolongkan jenis
+void cekJenisTransaksi(struct transaksi transaksiMhs[], int indeks){
+	if (strcmp(transaksiMhs[indeks].posAnggaran, "pemasukan") == 0){
+		strcpy(transaksiMhs[indeks].jenis, "Pemasukan");
+	} else {
+		strcpy(transaksiMhs[indeks].jenis, "Pengeluaran");
+	}
+}
+
+//Procedure untuk memberikan deskripsi transaksi
+void deskripsiTransaksi(struct transaksi transaksiMhs[], int indeks){
+	char varDeskripsi[100];
+	printf("Deskripsi dari transaksi : ");
+	fgets(varDeskripsi, sizeof(varDeskripsi), stdin);
+	varDeskripsi[strcspn(varDeskripsi, "\n")] = '\0';
+	strcpy(transaksiMhs[indeks].deskripsi, varDeskripsi);
+}
+//Procedure untuk memberikan nomor ID setiap transaksi
+void IDTransaksi(struct transaksi transaksiMhs[], int indeks){
+	transaksiMhs[indeks].ID = indeks + 1;
+}
+
+//Fungsi untuk menjumlahkan total pemasukan
+int jumlahTotalPemasukan(struct transaksi transaksiMhs[], int indeks, int varTotalPemasukan){
+	if (strcmp(transaksiMhs[indeks].jenis, "Pemasukan") == 0){
+		varTotalPemasukan = varTotalPemasukan + transaksiMhs[indeks].nominal;
+	}
+	return varTotalPemasukan;
+}
+//Fungsi untuk menjumlahkan total pengeluaran
+int jumlahTotalPengeluaran(struct transaksi transaksiMhs[], int indeks, int varTotalPengeluaran){
+	if (strcmp(transaksiMhs[indeks].jenis, "Pengeluaran") == 0){
+		varTotalPengeluaran = varTotalPengeluaran + transaksiMhs[indeks].nominal;
+	}
+	return varTotalPengeluaran;
+}
+//Fungsi untuk menghitung saldo akhir
+int jumlahSaldoAkhir(int varTotalPemasukan, int varTotalPengeluaran){
+	int varSaldoAkhir = varTotalPemasukan - varTotalPengeluaran; //varTotalPemasukan tidak boleh lebih kecil dari varTotalPengeluaran
+	if (varSaldoAkhir < 0){
+		printf("Sisa saldo tidak boleh kurang dari 0!\n");
+	}
+	return varSaldoAkhir;
+}
+//Fungsi untuk menghitung rata-rata pengeluaran per transaksi
+int rataRataPengeluaran(int varTotalPengeluaran, int varJmlTransaksi){
+	float varRataPengeluaran;
+	varRataPengeluaran = (varTotalPengeluaran / varJmlTransaksi);
+	return varRataPengeluaran;
+}
+//Fungsi untuk menghitung persentase sisa terhadap pemasukan
+float persentaseSisa(int varSaldoAkhir, int varTotalPemasukan){
+	float varPersentaseSisa;
+	varPersentaseSisa = (((float)varSaldoAkhir / varTotalPemasukan) * 100);
+	return varPersentaseSisa;
+}
+//Fungsi untuk menghitung jumlah transaksi pemasukan
+int jumlahTransaksiPemasukan(struct transaksi transaksiMhs[], int indeks){
+	int i;
+	int totalTransaksiPemasukan = 0;
+	for (i = 0; i < indeks; i++){
+		if (strcmp(transaksiMhs[i].jenis, "Pemasukan") == 0){
+			totalTransaksiPemasukan = totalTransaksiPemasukan + 1;
+		}
+	}
+	return totalTransaksiPemasukan;
+}
+//Fungsi untuk menghitung jumlah transaksi pengeluaran
+int jumlahTransaksiPengeluaran(struct transaksi transaksiMhs[], int indeks){
+	int i;
+	int totalTransaksiPengeluaran = 0;
+	for (i = 0; i < indeks; i++){
+		if (strcmp(transaksiMhs[i].jenis, "Pengeluaran") == 0){
+			totalTransaksiPengeluaran = totalTransaksiPengeluaran + 1;
+		}
+	}
+	return totalTransaksiPengeluaran;
+}
+//Program Utama
+int main(){
+	
+	//Deklarasi
+	struct transaksi transaksiMhs[30];
+	struct posAnggaran posAnggaranMhs[5];
+	int jmlTransaksi = 0;
+	int totalPemasukan = 0;
+	int totalPengeluaran = 0;
+	int saldoAkhir;
+	int rataPengeluaran;
+	float persenSisa;
+	int jmlTransaksiMasuk;
+	int jmlTransaksiKeluar;
+	char kondisi[9];
+	int i;
+	
+	//Inisialisasi data transaksi
+	inisialisasiTransaksi(transaksiMhs, 30);
+	inisialisasiPosAnggaran(posAnggaranMhs, 5);
+	//Menginput nilai di variabel record posAnggaran
+	for (i = 0; i < 5; i++){
+		golonganPosAnggaran(posAnggaranMhs, i);
+		inputBatasPengeluaran(posAnggaranMhs, i);
+	}
+	inputjmlTransaksi(&jmlTransaksi);
+	//Mengisi data di variabel record keuangan mahasiswa
+	for (i = 0; i < jmlTransaksi; i++){
+		//input transaksi
+		inputTanggal(transaksiMhs, i);
+		inputPosAnggaran(transaksiMhs, i);
+		inputNominal(transaksiMhs, i);
+		//Menggolongkan jenis (pemasukan/pengeluaran)
+		cekJenisTransaksi(transaksiMhs, i);
+		
+		//Memberikan deskripsi untuk setiap transaksi
+		deskripsiTransaksi(transaksiMhs, i);
+		
+		//Memberikan nomor ID untuk setiap transaksi
+		IDTransaksi(transaksiMhs, i);
+	}
+	//Perhitungan kondisi keuangan
+	for (i = 0; i < jmlTransaksi; i++){
+		totalPemasukan = jumlahTotalPemasukan(transaksiMhs, i, totalPemasukan);
+		totalPengeluaran = jumlahTotalPengeluaran(transaksiMhs, i, totalPengeluaran);
+	}
+	//Menghitung saldo akhir
+	saldoAkhir = jumlahSaldoAkhir(totalPemasukan, totalPengeluaran);
+	
+	//Menghitung rata-rata Pengeluaran per transaksi
+	rataPengeluaran = rataRataPengeluaran(totalPengeluaran, jmlTransaksi);
+	
+	//Menghitung persentase sisa terhadap pemasukan
+	persenSisa = persentaseSisa(saldoAkhir, totalPemasukan);
+	
+	//Menghitung jumlah aktivitas transaski pemasukan
+	jmlTransaksiMasuk = jumlahTransaksiPemasukan(transaksiMhs, jmlTransaksi);
+	
+	//Menghitung jumlah aktivitas transaksi pengeluaran
+	jmlTransaksiKeluar = jumlahTransaksiPengeluaran(transaksiMhs, jmlTransaksi);
+	
+	//Uji output
+	printf("\nJumlah transaksi dalam 1 bulan : %d\n", jmlTransaksi);
+	for (i = 0; i < jmlTransaksi; i++){
+		printf("\nID = %d\n", transaksiMhs[i].ID);
+		printf("Tanggal = %s", transaksiMhs[i].tanggal);
+		printf("Pos Anggaran = %s\n", transaksiMhs[i].posAnggaran);
+		printf("Nominal = %d\n", transaksiMhs[i].nominal);
+		printf("Jenis = %s\n", transaksiMhs[i].jenis);
+		printf("Deskripsi = %s\n", transaksiMhs[i].deskripsi);
+	}
+	printf("\nTotal pemasukan : %d", totalPemasukan);
+	printf("\nTotal pengeluaran : %d", totalPengeluaran);
+	printf("\nTotal saldo akhir : %d", saldoAkhir);
+	printf("\nRata-rata pengeluaran per transaksi : %d", rataPengeluaran);
+	if (saldoAkhir < 0){
+		printf("\nPersentase sisa terhadap pemasukan : tidak valid!");
+	} else {
+		printf("\nPersentase sisa terhadap pemasukan : %.2f%%", persenSisa);
+	}
+	printf("\nJumlah transaksi pemasukan : %d", jmlTransaksiMasuk);
+	printf("\nJumlah transaksi pengeluaran : %d", jmlTransaksiKeluar);
+
+	return 0;
+}
+
