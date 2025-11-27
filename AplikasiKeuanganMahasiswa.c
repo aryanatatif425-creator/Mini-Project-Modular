@@ -54,7 +54,7 @@ void tampilMenu(){
 void inisialisasiTransaksi(struct transaksi transaksiMhs[], int indeks){
 	//Loop untuk inisialisasi variabel struct bertipe transaksi
 		int i;
-		for (i = 0; i < 30; i++){
+		for (i = 0; i < indeks; i++){
 		transaksiMhs[i].nominal = 0;
 		transaksiMhs[i].ID = 0;
 		strcpy(transaksiMhs[i].posAnggaran, "Kosong");
@@ -72,7 +72,7 @@ void inisialisasiTransaksi(struct transaksi transaksiMhs[], int indeks){
 //=============================================================================
 void inisialisasiPosAnggaran(struct posAnggaran posAnggaranMhs[], int indeks){
 	int i;
-	for (i = 0; i < 30; i++){
+	for (i = 0; i < indeks; i++){
 		posAnggaranMhs[i].realisasi = 0;
 		posAnggaranMhs[i].batasPengeluaran = 0;
 		strcpy(posAnggaranMhs[i].posAnggaran, "Kosong");
@@ -195,13 +195,13 @@ void inputPosAnggaran(struct transaksi transaksiMhs[], struct posAnggaran posAng
 		if (pilihan == 0){
 			strcpy(transaksiMhs[indeks].posAnggaran, "pemasukan");
 		} 
-		if (pilihan > 0 && pilihan < varJmlPos + 1){
+		if (pilihan > 0 && pilihan < varJmlPos){
 			strcpy(transaksiMhs[indeks].posAnggaran, posAnggaranMhs[pilihan - 1].posAnggaran);
 		}
-		if (pilihan < 0 && pilihan > varJmlPos + 1){
+		if (pilihan < 0 || pilihan > varJmlPos){
 			printf("Input tidak valid. Coba lagi.");
 		}
-	} while (pilihan < 0 && pilihan > varJmlPos + 1);
+	} while (pilihan < 0 || pilihan > varJmlPos);
 	
 
     
@@ -399,13 +399,12 @@ int jumlahTransaksiPengeluaran(struct transaksi transaksiMhs[], int indeks, int 
 //Input2 : Nilai dari variabel struct bertipe posAnggaran dengan subvariabel realisasi
 //Output : Nilai dari variabel struct bertipe posAnggaran dengan subvariabel sisaAnggaran
 //=====================================================================================================
-int hitungSisaAnggaran(struct posAnggaran posAnggaranMhs[]){
-	posAnggaranMhs[0].sisaAnggaran = posAnggaranMhs[0].batasPengeluaran - posAnggaranMhs[0].realisasi;
-	posAnggaranMhs[1].sisaAnggaran = posAnggaranMhs[1].batasPengeluaran - posAnggaranMhs[1].realisasi;
-	posAnggaranMhs[2].sisaAnggaran = posAnggaranMhs[2].batasPengeluaran - posAnggaranMhs[2].realisasi;
-	posAnggaranMhs[3].sisaAnggaran = posAnggaranMhs[3].batasPengeluaran - posAnggaranMhs[3].realisasi;
-	posAnggaranMhs[4].sisaAnggaran = posAnggaranMhs[4].batasPengeluaran - posAnggaranMhs[4].realisasi;
-	return 0;
+int hitungSisaAnggaran(struct posAnggaran posAnggaranMhs[], int varJmlPos){
+	int i;
+	for (i = 0; i < varJmlPos; i++){
+			posAnggaranMhs[i].sisaAnggaran = posAnggaranMhs[i].batasPengeluaran - posAnggaranMhs[i].realisasi;
+	}
+	return 1;
 }
 //=====================================================================================================
 
@@ -616,6 +615,10 @@ int main(){
 	
 				//Input jumlah transaksi yang dilakukan
 				inputjmlTransaksi(&jmlTransaksi, &lanjutTransaksi);
+				if (jmlTransaksi == 0){
+					printf("Tidak ada transaksi.");
+					return 0; //Program langusng berakhir karena tidak ada transaksi
+				}
 				
 				//Mengisi data di variabel record keuangan mahasiswa
 				for (i = 0; i < jmlTransaksi; i++){
@@ -624,10 +627,10 @@ int main(){
 					tampilkanPosAnggaran(posAnggaranMhs, jmlPos);
 					inputPosAnggaran(transaksiMhs, posAnggaranMhs, i, jmlPos);
 					inputNominal(transaksiMhs, i);
-		
 					cekJenisTransaksi(transaksiMhs, i); 									//Menggolongkan jenis transaksi (pemasukan/pengeluaran)
 					deskripsiTransaksi(transaksiMhs, i); 									//Memberikan deskripsi untuk setiap transaksi
 					IDTransaksi(transaksiMhs, i); 											//Memberikan nomor ID untuk setiap transaksi
+					
 					hitungRealisasiPengeluaran(transaksiMhs, i, posAnggaranMhs, jmlPos); 	//Menghitung realisasi nominal masing-masing pos anggaran
 					jmlTransaksiPos(posAnggaranMhs, jmlPos, transaksiMhs, i); 				//Menghitung jumlah transaksi yang dilakukan oleh masing-masing pos anggaran
 				}
@@ -643,8 +646,7 @@ int main(){
 				saldoAkhir = jumlahSaldoAkhir(totalPemasukan, totalPengeluaran); 				//Menghitung saldo akhir
 				rataPengeluaran = rataRataPengeluaran(totalPengeluaran, jmlTransaksi); 			//Menghitung rata-rata Pengeluaran per transaksi
 				persenSisa = persentaseSisa(saldoAkhir, totalPemasukan); 						//Menghitung persentase sisa terhadap pemasukan
-				
-				hitungSisaAnggaran(posAnggaranMhs); 											//Menghitung sisa anggaran berdasarkan berdasarkan batas pengeluaran dari masing-masing pos anggaran
+				hitungSisaAnggaran(posAnggaranMhs, jmlPos); 									//Menghitung sisa anggaran berdasarkan berdasarkan batas pengeluaran dari masing-masing pos anggaran
 				cekStatus(posAnggaranMhs); 														//Mengecek status untuk setiap sisa anggaran dari masing-masing pos anggaran
 				cekKondisiTotal(saldoAkhir, kondisiKeuangan); 									//Menentukan kondisi total keuangan mahasiswa
 				jmlTransaksi = jmlTransaksi + lanjutTransaksi;
@@ -678,11 +680,16 @@ int main(){
 	
 				//Menginput hasil rekapan transaksi keuangan ke dalam file
 				FILE *fp = fopen("Keuangan.txt", "w");
-				TampilRekap(fp, jmlTransaksiMasuk, jmlTransaksiKeluar, totalPemasukan, totalPengeluaran, saldoAkhir, rataPengeluaran); 	//Menampilkan total pemasukan, total pengeluaran, saldo akhir, dan rata-rata pengeluaran
-				TampilTabel(fp, posAnggaranMhs, saldoAkhir, jmlPos); 																			//Menampilkan tabel berisi data-data dari variabel struct bertipe posAnggaran
-				printf("Kondisi Keuangan : %s (Sisa %.2f%% dari total pemasukan)", kondisiKeuangan, persenSisa);
-				fprintf(fp, "Kondisi Keuangan : %s (Sisa %.2f%% dari total pemasukan)", kondisiKeuangan, persenSisa);
-				kesimpulanKondisi(fp, saldoAkhir, totalPemasukan); 																		//Menentukan kesimpulan berdasarkan kondisi keuangan mahasiswa 
+				if (fp == NULL) {
+   					printf("Gagal membuka file!\n");
+    				exit(1);
+				} else {
+					TampilRekap(fp, jmlTransaksiMasuk, jmlTransaksiKeluar, totalPemasukan, totalPengeluaran, saldoAkhir, rataPengeluaran); 	//Menampilkan total pemasukan, total pengeluaran, saldo akhir, dan rata-rata pengeluaran
+					TampilTabel(fp, posAnggaranMhs, saldoAkhir, jmlPos); 																	//Menampilkan tabel berisi data-data dari variabel struct bertipe posAnggaran
+					printf("Kondisi Keuangan : %s (Sisa %.2f%% dari total pemasukan)", kondisiKeuangan, persenSisa);
+					fprintf(fp, "Kondisi Keuangan : %s (Sisa %.2f%% dari total pemasukan)", kondisiKeuangan, persenSisa);
+					kesimpulanKondisi(fp, saldoAkhir, totalPemasukan); 																		//Menentukan kesimpulan berdasarkan kondisi keuangan mahasiswa 
+				}
 				fclose(fp);
 				break;
 			case 3:
@@ -692,8 +699,6 @@ int main(){
 				printf("Pilihan tidak valid!\n");
 		}
 	} while (nomorMenu != 3);
-	
-	//Uji output
 	
 	return 0;
 }
