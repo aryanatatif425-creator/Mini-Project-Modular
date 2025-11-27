@@ -153,15 +153,27 @@ void inputjmlTransaksi(int *varJmlTransaksi, int *varlanjutTransaksi){
 }
 //=======================================================================================
 
+//===========================================================================================================================
+//Procedure untuk memberikan nomor ID setiap transaksi
+//I.S. : Nomor ID untuk setiap transaksi dalam variabel struct bertipe record belum diketahui
+//F.S. : Nomor ID untuk setiap transaksi dalam variabel struct bertipe record telah diisi secara beurutan mulai dari angka 1
+//==========================================================================================================================
+void IDTransaksi(FILE *dk, struct transaksi transaksiMhs[], int indeks){
+	transaksiMhs[indeks].ID = indeks + 1;
+	fprintf(dk, "%d |", transaksiMhs[indeks].ID);
+}
+//==========================================================================================================================
+
 //=======================================================================================
 //Procedure untuk mengisi tanggal
 //I.S. : Tanggal pada variabel struct bertipe transaksi belum diketahui
 //F.S. : Tanggal pada variabel struct bertipe transaksi telah diinput oleh user
 //=======================================================================================
-void inputTanggal(struct transaksi transaksiMhs[], int indeks){
+void inputTanggal(FILE *dk, struct transaksi transaksiMhs[], int indeks){
 	printf("\nMasukan tanggal transaksi (dd/mm/yyyy) : ");
 	fgets(transaksiMhs[indeks].tanggal, sizeof(transaksiMhs[indeks].tanggal), stdin);
 	while (getchar() != '\n');
+	fprintf(dk, "%s |", transaksiMhs[indeks].tanggal);
 }
 //=======================================================================================
 
@@ -186,7 +198,7 @@ void tampilkanPosAnggaran(struct posAnggaran posAnggaranMhs[], int varJmlPos) {
 //I.S. : Nama pos anggaran dari variabel struct bertipe transaksi masih kosong
 //F.S. : Nama pos anggaran dari variabel struct bertipe transaksi telah diinput oleh user berdasarkan pilihan
 //============================================================================================================
-void inputPosAnggaran(struct transaksi transaksiMhs[], struct posAnggaran posAnggaranMhs[], int indeks, int varJmlPos){
+void inputPosAnggaran(FILE *dk, struct transaksi transaksiMhs[], struct posAnggaran posAnggaranMhs[], int indeks, int varJmlPos){
 	int pilihan;
 	do {
 		printf("\nPilih nomor pos anggaran : ");
@@ -194,14 +206,16 @@ void inputPosAnggaran(struct transaksi transaksiMhs[], struct posAnggaran posAng
 		getchar();
 		if (pilihan == 0){
 			strcpy(transaksiMhs[indeks].posAnggaran, "pemasukan");
+			fprintf(dk, "%s |", transaksiMhs[indeks].posAnggaran);
 		} 
-		if (pilihan > 0 && pilihan < varJmlPos){
+		if (pilihan > 0 && pilihan < varJmlPos + 1){
 			strcpy(transaksiMhs[indeks].posAnggaran, posAnggaranMhs[pilihan - 1].posAnggaran);
+			fprintf(dk, "%s |", transaksiMhs[indeks].posAnggaran);
 		}
-		if (pilihan < 0 || pilihan > varJmlPos){
+		if (pilihan < 0 && pilihan > varJmlPos + 1){
 			printf("Input tidak valid. Coba lagi.");
 		}
-	} while (pilihan < 0 || pilihan > varJmlPos);
+	} while (pilihan < 0 && pilihan > varJmlPos + 1);
 	
 
     
@@ -213,7 +227,7 @@ void inputPosAnggaran(struct transaksi transaksiMhs[], struct posAnggaran posAng
 //I.S. : Jumlah nominal untuk setiap transaksi dalam variabel struct bertipe transaksi belum diketahui
 //F.S. : Jumlah nominal untuk setiap transaksi dalam variabel struct bertipe transaksi telah diinput oleh user
 //=============================================================================================================
-void inputNominal(struct transaksi transaksiMhs[], int indeks){
+void inputNominal(FILE *dk, struct transaksi transaksiMhs[], int indeks){
 	int varNominal;
 	do {
 		printf("Masukkan jumlah nominal (jangan menggunakan titik/koma) : ");
@@ -224,6 +238,7 @@ void inputNominal(struct transaksi transaksiMhs[], int indeks){
 		}
 	} while (varNominal < 0);
 	transaksiMhs[indeks].nominal = varNominal;
+	fprintf(dk, "%d |", transaksiMhs[indeks].nominal);
 }
 //=============================================================================================================
 
@@ -232,12 +247,13 @@ void inputNominal(struct transaksi transaksiMhs[], int indeks){
 //I.S. : Jenis-jenis dari setiap transaksi dalam variabel struct bertipe transaksi belum diketahui
 //F.S. : Jenis-jenis dari setiap transaksi dalam variabel struct bertipe transaksi telah diklasifikasikan
 //=========================================================================================================
-void cekJenisTransaksi(struct transaksi transaksiMhs[], int indeks){
+void cekJenisTransaksi(FILE *dk, struct transaksi transaksiMhs[], int indeks){
 	if (strcmp(transaksiMhs[indeks].posAnggaran, "pemasukan") == 0){
 		strcpy(transaksiMhs[indeks].jenis, "Pemasukan");
 	} else {
 		strcpy(transaksiMhs[indeks].jenis, "Pengeluaran");
 	}
+	fprintf(dk, "%s |", transaksiMhs[indeks].jenis);
 }
 //=========================================================================================================
 
@@ -246,24 +262,15 @@ void cekJenisTransaksi(struct transaksi transaksiMhs[], int indeks){
 //I.S. : Deskripsi dari setiap transaksi dalam variabel struct bertipe transaksi tidak diketahui
 //F.S. : Deskripsi dari setiap transaksi dalam variabel struct bertipe transaksi telah diinput oleh user
 //=========================================================================================================
-void deskripsiTransaksi(struct transaksi transaksiMhs[], int indeks){
+void deskripsiTransaksi(FILE *dk, struct transaksi transaksiMhs[], int indeks){
 	char varDeskripsi[100];
 	printf("Deskripsi dari transaksi : ");
 	fgets(varDeskripsi, sizeof(varDeskripsi), stdin);
 	varDeskripsi[strcspn(varDeskripsi, "\n")] = '\0';
 	strcpy(transaksiMhs[indeks].deskripsi, varDeskripsi);
+	fprintf(dk, "%s |\n", transaksiMhs[indeks].deskripsi);
 }
 //=========================================================================================================
-
-//===========================================================================================================================
-//Procedure untuk memberikan nomor ID setiap transaksi
-//I.S. : Nomor ID untuk setiap transaksi dalam variabel struct bertipe record belum diketahui
-//F.S. : Nomor ID untuk setiap transaksi dalam variabel struct bertipe record telah diisi secara beurutan mulai dari angka 1
-//==========================================================================================================================
-void IDTransaksi(struct transaksi transaksiMhs[], int indeks){
-	transaksiMhs[indeks].ID = indeks + 1;
-}
-//==========================================================================================================================
 
 //================================================================================================================================================
 //Procedure untuk menghitung jumlah transaksi yang dilakukan oleh masing-masing pos anggaran
@@ -399,12 +406,13 @@ int jumlahTransaksiPengeluaran(struct transaksi transaksiMhs[], int indeks, int 
 //Input2 : Nilai dari variabel struct bertipe posAnggaran dengan subvariabel realisasi
 //Output : Nilai dari variabel struct bertipe posAnggaran dengan subvariabel sisaAnggaran
 //=====================================================================================================
-int hitungSisaAnggaran(struct posAnggaran posAnggaranMhs[], int varJmlPos){
-	int i;
-	for (i = 0; i < varJmlPos; i++){
-			posAnggaranMhs[i].sisaAnggaran = posAnggaranMhs[i].batasPengeluaran - posAnggaranMhs[i].realisasi;
-	}
-	return 1;
+int hitungSisaAnggaran(struct posAnggaran posAnggaranMhs[]){
+	posAnggaranMhs[0].sisaAnggaran = posAnggaranMhs[0].batasPengeluaran - posAnggaranMhs[0].realisasi;
+	posAnggaranMhs[1].sisaAnggaran = posAnggaranMhs[1].batasPengeluaran - posAnggaranMhs[1].realisasi;
+	posAnggaranMhs[2].sisaAnggaran = posAnggaranMhs[2].batasPengeluaran - posAnggaranMhs[2].realisasi;
+	posAnggaranMhs[3].sisaAnggaran = posAnggaranMhs[3].batasPengeluaran - posAnggaranMhs[3].realisasi;
+	posAnggaranMhs[4].sisaAnggaran = posAnggaranMhs[4].batasPengeluaran - posAnggaranMhs[4].realisasi;
+	return 0;
 }
 //=====================================================================================================
 
@@ -413,32 +421,16 @@ int hitungSisaAnggaran(struct posAnggaran posAnggaranMhs[], int varJmlPos){
 //I.S. : Isi dari variabel struct bertipe posAnggaran dengan subvariabel yaitu status masih bernilai kosong
 //F.S. : Isi dari variabel struct bertipe posAnggaran dengan subvariabel yaitu status berubah nilai menjadi aman atau tidak aman tergantung pengeluaran
 //======================================================================================================================================================
-void cekStatus(struct posAnggaran posAnggaranMhs[]){
-	if (posAnggaranMhs[0].realisasi > posAnggaranMhs[0].batasPengeluaran){
-		strcpy(posAnggaranMhs[0].status, "Tidak Aman");
-	} else {
-		strcpy(posAnggaranMhs[0].status, "Aman");
+void cekStatus(struct posAnggaran posAnggaranMhs[], int indeks){
+	int i;
+	for (i = 0; i < indeks; i++){
+		if (posAnggaranMhs[indeks].realisasi > posAnggaranMhs[indeks].batasPengeluaran){
+			strcpy(posAnggaranMhs[indeks].status, "Tidak Aman");
+		} else {
+			strcpy(posAnggaranMhs[indeks].status, "Aman");
+		}
 	}
-	if (posAnggaranMhs[1].realisasi > posAnggaranMhs[1].batasPengeluaran){
-		strcpy(posAnggaranMhs[1].status, "Tidak Aman");
-	} else {
-		strcpy(posAnggaranMhs[1].status, "Aman");
-	}
-	if (posAnggaranMhs[2].realisasi > posAnggaranMhs[2].batasPengeluaran){
-		strcpy(posAnggaranMhs[2].status, "Tidak Aman");
-	} else {
-		strcpy(posAnggaranMhs[2].status, "Aman");
-	}
-	if (posAnggaranMhs[3].realisasi > posAnggaranMhs[3].batasPengeluaran){
-		strcpy(posAnggaranMhs[3].status, "Tidak Aman");
-	} else {
-		strcpy(posAnggaranMhs[3].status, "Aman");
-	}
-	if (posAnggaranMhs[4].realisasi > posAnggaranMhs[4].batasPengeluaran){
-		strcpy(posAnggaranMhs[4].status, "Tidak Aman");
-	} else {
-		strcpy(posAnggaranMhs[4].status, "Aman");
-	}
+	
 }
 //======================================================================================================================================================
 
@@ -623,14 +615,21 @@ int main(){
 				//Mengisi data di variabel record keuangan mahasiswa
 				for (i = 0; i < jmlTransaksi; i++){
 					//input transaksi
-					inputTanggal(transaksiMhs, i);
-					tampilkanPosAnggaran(posAnggaranMhs, jmlPos);
-					inputPosAnggaran(transaksiMhs, posAnggaranMhs, i, jmlPos);
-					inputNominal(transaksiMhs, i);
-					cekJenisTransaksi(transaksiMhs, i); 									//Menggolongkan jenis transaksi (pemasukan/pengeluaran)
-					deskripsiTransaksi(transaksiMhs, i); 									//Memberikan deskripsi untuk setiap transaksi
-					IDTransaksi(transaksiMhs, i); 											//Memberikan nomor ID untuk setiap transaksi
-					
+					FILE *dk = fopen("dataKeuangan.txt", "a");
+					if (dk == NULL){
+						printf("Gagal membuka file!\n");
+						exit(1);
+					} else {
+						IDTransaksi(dk, transaksiMhs, i);											//Memberikan nomor ID untuk setiap transaksi
+						inputTanggal(dk, transaksiMhs, i);
+						tampilkanPosAnggaran(posAnggaranMhs, jmlPos);
+						inputPosAnggaran(dk, transaksiMhs, posAnggaranMhs, i, jmlPos);
+						inputNominal(dk, transaksiMhs, i);
+						cekJenisTransaksi(dk, transaksiMhs, i); 									//Menggolongkan jenis transaksi (pemasukan/pengeluaran)
+						deskripsiTransaksi(dk, transaksiMhs, i); 									//Memberikan deskripsi untuk setiap transaksi
+					}
+					fclose(dk);
+			
 					hitungRealisasiPengeluaran(transaksiMhs, i, posAnggaranMhs, jmlPos); 	//Menghitung realisasi nominal masing-masing pos anggaran
 					jmlTransaksiPos(posAnggaranMhs, jmlPos, transaksiMhs, i); 				//Menghitung jumlah transaksi yang dilakukan oleh masing-masing pos anggaran
 				}
@@ -646,8 +645,9 @@ int main(){
 				saldoAkhir = jumlahSaldoAkhir(totalPemasukan, totalPengeluaran); 				//Menghitung saldo akhir
 				rataPengeluaran = rataRataPengeluaran(totalPengeluaran, jmlTransaksi); 			//Menghitung rata-rata Pengeluaran per transaksi
 				persenSisa = persentaseSisa(saldoAkhir, totalPemasukan); 						//Menghitung persentase sisa terhadap pemasukan
-				hitungSisaAnggaran(posAnggaranMhs, jmlPos); 									//Menghitung sisa anggaran berdasarkan berdasarkan batas pengeluaran dari masing-masing pos anggaran
-				cekStatus(posAnggaranMhs); 														//Mengecek status untuk setiap sisa anggaran dari masing-masing pos anggaran
+				
+				hitungSisaAnggaran(posAnggaranMhs); 											//Menghitung sisa anggaran berdasarkan berdasarkan batas pengeluaran dari masing-masing pos anggaran
+				cekStatus(posAnggaranMhs, jmlPos); 												//Mengecek status untuk setiap sisa anggaran dari masing-masing pos anggaran
 				cekKondisiTotal(saldoAkhir, kondisiKeuangan); 									//Menentukan kondisi total keuangan mahasiswa
 				jmlTransaksi = jmlTransaksi + lanjutTransaksi;
 	
@@ -702,5 +702,4 @@ int main(){
 	
 	return 0;
 }
-
 
