@@ -424,10 +424,10 @@ int hitungSisaAnggaran(struct posAnggaran posAnggaranMhs[]){
 void cekStatus(struct posAnggaran posAnggaranMhs[], int indeks){
 	int i;
 	for (i = 0; i < indeks; i++){
-		if (posAnggaranMhs[indeks].realisasi > posAnggaranMhs[indeks].batasPengeluaran){
-			strcpy(posAnggaranMhs[indeks].status, "Tidak Aman");
+		if (posAnggaranMhs[i].realisasi > posAnggaranMhs[i].batasPengeluaran){
+			strcpy(posAnggaranMhs[i].status, "Tidak Aman");
 		} else {
-			strcpy(posAnggaranMhs[indeks].status, "Aman");
+			strcpy(posAnggaranMhs[i].status, "Aman");
 		}
 	}
 	
