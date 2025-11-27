@@ -1,0 +1,41 @@
+int hitung_realisasi(int produk[], int jumlah_transaksi[], int realisasi[]){
+    realisasi[30] = produk[30] * jumlah_transaksi[30];
+    return realisasi[30];
+}
+
+int hitung_sisa_anggaran(int batas_nominal[], int realisasi[], int sisa_anggaran[]){
+    sisa_anggaran[30] = batas_nominal[30] - realisasi[30];
+    return realisasi[30];
+}
+
+int cek_status(int sisa_anggaran[], char status[]){
+    if (sisa_anggaran[30] > 0){
+        strcpy(status[30], "Aman\n");
+    } else strcpy(status[30], "tidak aman\n");
+}
+
+// Fungsi untuk menentukan kondisi keuangan
+void tentukan_kondisi(int saldo, char kondisi[]) {
+    if (saldo < 0) {
+        strcpy(kondisi, "Defisit (Pengeluaran lebih besar dari pemasukan)");
+    } else if (saldo == 0) {
+        strcpy(kondisi, "Seimbang (Tanpa sisa uang)");
+    } else {
+        strcpy(kondisi, "Surplus (Masih memiliki sisa uang)");
+    }
+}
+
+// Fungsi untuk melihat kondisi mahasiswa
+void tentukan_kondisi_mahasiswa(int saldo, int total_pemasukan, char kondisi_mahasiswa[]) {
+    if (saldo > total_pemasukan / 4) { // Lebih dari 25%
+        strcpy(kondisi_mahasiswa, "Anda termasuk mahasiswa hemat dan produktif.\n");
+    } else if (saldo > 0 && saldo <= total_pemasukan / 4) { // 1 hingga 25%
+        strcpy(kondisi_mahasiswa, "Keuangan anda seimbang, tetap waspada terhadap pengeluaran tidak perlu.\n");
+    } else if (saldo == 0) { // Tuntuk saldo == 0
+        strcpy(kondisi_mahasiswa, "Keuangan seimbang, tapi perhatikan pengeluaran agar tidak defisit.\n");
+    } else if (saldo < 0 && saldo >= total_pemasukan / -10) { // -10% hingga 0
+        strcpy(kondisi_mahasiswa, "Anda mulai boros, perhatikan pengeluaran harian.\n");
+    } else if (saldo < total_pemasukan / -10) { // Kurang dari -10%
+        strcpy(kondisi_mahasiswa, "Kondisi keuangan kurang sehat. Kurangi pengeluaran dan cari tambahan pemasukan.\n");
+    }
+}
