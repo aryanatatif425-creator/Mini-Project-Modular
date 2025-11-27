@@ -120,3 +120,8 @@ void tentukan_kondisi(int saldo, char kondisi[]) {
         strcpy(kondisi, "Surplus (Masih memiliki sisa uang)");
     }
 }
+
+//Fungsi untuk menghitung persentase
+void menghitung_persentase(int saldo, int total_pemasukan, float *persentase) {
+    *persentase = saldo/total_pemasukan * 100;
+}
