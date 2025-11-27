@@ -373,14 +373,10 @@ float persentaseSisa(int varSaldoAkhir, int varTotalPemasukan){
 //Output : Nilai totalTransaksiPemasukan akan terus bertambah jika untuk setiap jenis transaksi sama dengan pemasukan
 //=====================================================================================================================
 int jumlahTransaksiPemasukan(struct transaksi transaksiMhs[], int indeks, int varJmlTransaksiMasuk){
-	int i;
-	int totalTransaksiPemasukan = 0;
-	for (i = 0; i < indeks; i++){
-		if (strcmp(transaksiMhs[i].jenis, "Pemasukan") == 0){
-			totalTransaksiPemasukan = totalTransaksiPemasukan + 1;
+		if (strcmp(transaksiMhs[indeks].jenis, "Pemasukan") == 0){
+			varJmlTransaksiMasuk = varJmlTransaksiMasuk + 1;
 		}
-	}
-	return totalTransaksiPemasukan;
+	return varJmlTransaksiMasuk;
 }
 //=====================================================================================================================
 
@@ -389,15 +385,11 @@ int jumlahTransaksiPemasukan(struct transaksi transaksiMhs[], int indeks, int va
 //Input1 : Nilai dari variabel struct bertipe transaksi dengan subvariabel yaitu jenis
 //Output : Nilai totalTransaksiPemasukan akan terus bertambah jika untuk setiap jenis transaksi sama dengan pemasukan
 //=====================================================================================================================
-int jumlahTransaksiPengeluaran(struct transaksi transaksiMhs[], int indeks){
-	int i;
-	int totalTransaksiPengeluaran = 0;
-	for (i = 0; i < indeks; i++){
-		if (strcmp(transaksiMhs[i].jenis, "Pengeluaran") == 0){
-			totalTransaksiPengeluaran = totalTransaksiPengeluaran + 1;
+int jumlahTransaksiPengeluaran(struct transaksi transaksiMhs[], int indeks, int varJmlTransaksiKeluar){
+	if (strcmp(transaksiMhs[indeks].jenis, "Pengeluaran") == 0){
+			varJmlTransaksiKeluar = varJmlTransaksiKeluar + 1;
 		}
-	}
-	return totalTransaksiPengeluaran;
+	return varJmlTransaksiKeluar;
 }
 //=====================================================================================================================
 
