@@ -702,9 +702,9 @@ int main(){
 					} else {
 						for (i = transaksiAwal; i < transaksiAkhir; i++){
 							IDTransaksi(dk, transaksiMhs, i);									//Memberikan nomor ID untuk setiap transaksi
-							inputTanggal(dk, transaksiMhs, i);
-							tampilkanPosAnggaran(posAnggaranMhs, jmlPos);
-							inputPosAnggaran(dk, transaksiMhs, posAnggaranMhs, i, jmlPos);
+							inputTanggal(dk, transaksiMhs, i);									//Menginput tanggal untuk masing-masing transaksi
+							tampilkanPosAnggaran(posAnggaranMhs, jmlPos);						//Menampilkan pilihan pos anggaran
+							inputPosAnggaran(dk, transaksiMhs, posAnggaranMhs, i, jmlPos);		//Menginput nominal transaksi
 							cekJenisTransaksi(dk, transaksiMhs, i); 							//Menggolongkan jenis transaksi (pemasukan/pengeluaran)
 							inputNominal(dk, transaksiMhs, i); 									//Menginput nominal masing-masing transaksi
 							deskripsiTransaksi(dk, transaksiMhs, i); 							//Memberikan deskripsi untuk setiap transaksi
@@ -724,7 +724,7 @@ int main(){
    					filePosAnggaran(pa, posAnggaranMhs, &jmlPos);
 				}
 				fclose(pa);
-				
+			
 				//Mengambil data-data transaksi di file dataKeuangan
 				FILE *dk = fopen("dataKeuangan.txt", "r");
 				if (dk == NULL) {
@@ -736,7 +736,7 @@ int main(){
 				}
 				fclose(dk);
 				
-				//Jika data transaksi langsung mengambil dari file
+				//Jika data-data transaksi telah ada di file dataKeuangan, langsung mengambil dari file
 				if (jmlTransaksi == 0){
 					transaksiAkhir = barisFile;
 				}
