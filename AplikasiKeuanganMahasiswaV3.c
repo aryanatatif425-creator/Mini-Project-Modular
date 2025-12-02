@@ -309,6 +309,7 @@ void fileDataKeuangan(FILE *dk, struct transaksi transaksiMhs[], int *varBarisFi
         strcpy(transaksiMhs[*varBarisFile].jenis, tokenFile);
         			
         tokenFile = strtok(NULL, "|");
+        if (tokenFile == NULL) continue; // skip jika format tidak lengkap
         transaksiMhs[*varBarisFile].nominal = atoi(tokenFile);
         			
         tokenFile = strtok(NULL, "|");
@@ -422,9 +423,9 @@ int jumlahSaldoAkhir(int varTotalPemasukan, int varTotalPengeluaran){
 //Input2 : Nilai dari parameter varJmlTransaksi
 //Output : Nilai varRataPengeluaran yaitu rata-rata hasil pembagian varTotalPengeluaran dibagi varTotalPengeluaran
 //=================================================================================================================
-int rataRataPengeluaran(int varTotalPengeluaran, int varJmlTransaksi){
+int rataRataPengeluaran(int varTotalPengeluaran, int varTransaksiAkhir){
 	float varRataPengeluaran;
-	varRataPengeluaran = (varTotalPengeluaran / varJmlTransaksi);
+	varRataPengeluaran = (varTotalPengeluaran / varTransaksiAkhir);
 	return varRataPengeluaran;
 }
 //=================================================================================================================
@@ -713,6 +714,17 @@ int main(){
 				fclose(dk);
 				break;
 			case 2: {
+				//membaca file pos_Anggaran
+				FILE *pa = fopen("pos_Anggaran.txt", "r");
+				if (pa == NULL) {
+        			printf("File tidak ditemukan!\n");
+        			return 1;
+   				} else {
+   					jmlPos = 0;
+   					filePosAnggaran(pa, posAnggaranMhs, &jmlPos);
+				}
+				fclose(pa);
+				
 				//Mengambil data-data transaksi di file dataKeuangan
 				FILE *dk = fopen("dataKeuangan.txt", "r");
 				if (dk == NULL) {
@@ -741,16 +753,6 @@ int main(){
 					break;
 				}
 				
-				jmlPos = 0;
-				FILE *pa = fopen("pos_Anggaran.txt", "r");
-				if (pa == NULL) {
-        			printf("File tidak ditemukan!\n");
-        			return 1;
-   				} else {
-   					filePosAnggaran(pa, posAnggaranMhs, &jmlPos);
-				}
-				fclose(pa);
-				
 				//Perhitungan total nominal masing masing jenis transkasi keuangan
 				for (i = transaksiAwal; i < transaksiAkhir; i++){
 					hitungRealisasiPengeluaran(transaksiMhs, i, posAnggaranMhs, jmlPos); 	//Menghitung realisasi nominal masing-masing pos anggaran
@@ -762,7 +764,7 @@ int main(){
 				}
 
 				saldoAkhir = jumlahSaldoAkhir(totalPemasukan, totalPengeluaran); 				//Menghitung saldo akhir
-				rataPengeluaran = rataRataPengeluaran(totalPengeluaran, jmlTransaksi); 			//Menghitung rata-rata Pengeluaran per transaksi
+				rataPengeluaran = rataRataPengeluaran(totalPengeluaran, transaksiAkhir); 			//Menghitung rata-rata Pengeluaran per transaksi
 				persenSisa = persentaseSisa(saldoAkhir, totalPemasukan); 						//Menghitung persentase sisa terhadap pemasukan
 				hitungSisaAnggaran(posAnggaranMhs, jmlPos); 									//Menghitung sisa anggaran berdasarkan berdasarkan batas pengeluaran dari masing-masing pos anggaran
 				cekStatus(posAnggaranMhs, jmlPos); 												//Mengecek status untuk setiap sisa anggaran dari masing-masing pos anggaran
