@@ -609,8 +609,6 @@ void kesimpulanKondisi(FILE *fp, int varSaldoAkhir, int varTotalPemasukan){
 }
 //===================================================================================================================
 
-//Modul di dalam Modul
-
 
 //Program Utama
 int main(){
