@@ -83,12 +83,17 @@ void inisialisasiPosAnggaran(struct posAnggaran posAnggaranMhs[], int indeks){
 }
 //=============================================================================
 
+//=============================================================================
 //Menampilkan menu untuk membuat pos anggaran
+//I.S. : Tampilan menu untuk membuat pos anggaran belum ada
+//I.S. : Tampilan menu untuk membuat pos anggaran tampil di layar
+//=============================================================================
 void tampilPosAnggaran(){
 	printf("=========Buat Pos Anggaran=========");
 	printf("\n1. Tambah pos anggaran");
 	printf("\n2. Simpan pos anggaran");
 }
+//=============================================================================
 
 //====================================================================================
 //Procedure untuk memberikan nama pos anggaran di variabel record pos anggaran
@@ -320,6 +325,12 @@ void fileDataKeuangan(FILE *dk, struct transaksi transaksiMhs[], int *varBarisFi
     }
 }
 //============================================================================================================
+
+//===============================================================================================================
+//Procedure untuk mengisi data-data transaksi dari file pos_Anggaran.txt ke variabel struct bertipe posAnggaran
+//I.S. : Data-data transaksi dari file pos_Anggaran belum diinput ke variabel struct bertipe posAnggaran
+//F.S. :  Data-data transaksi dari file pos_Anggaran telah diinput ke variabel struct bertipe posAnggaran
+//===============================================================================================================
 void filePosAnggaran(FILE *pa, struct posAnggaran posAnggaranMhs[], int *varJmlPos){
 	char isiFile[10000];
 	
@@ -341,11 +352,7 @@ void filePosAnggaran(FILE *pa, struct posAnggaran posAnggaranMhs[], int *varJmlP
         (*varJmlPos)++;
     }
 }
-//==================================================================================================================
-//Procedure untuk membaca data dari file pos_Anggaran.txt dan menginputnya ke variabel struct bertipe posAnggaran
-//I.S. : variabel struct bertipe anggaran belum diisi oleh data dari file pos_Anggaran
-//F.S. : variabel struct bertipe anggaran telah diisi oleh data dari file pos_Anggaran
-//==================================================================================================================
+//===============================================================================================================
 
 //================================================================================================================================================
 //Procedure untuk menghitung jumlah transaksi yang dilakukan oleh masing-masing pos anggaran
@@ -646,8 +653,8 @@ int main(){
 		getchar();
 		printf("\n");
 		switch (nomorMenu) {
-			case 1:
-				//Menginput nama pos anggaran dan batas pengeluaran di variabel record posAnggaran
+			//Menambahkan transaksi baru
+			case 1: //Menginput nama pos anggaran dan batas pengeluaran di variabel record posAnggaran
 				do {
 					tampilPosAnggaran();
 					printf("\nPilih Nomor : ");
@@ -679,8 +686,8 @@ int main(){
 					}	
 				} while (nomor != 2);
 				printf("\n");
-				//Input jumlah transaksi yang dilakukan
 				
+				//Input jumlah transaksi yang dilakukan
 				inputjmlTransaksi(&jmlTransaksi);
 				if (jmlTransaksi == 0){
 					printf("Tidak ada transaksi.");
@@ -699,19 +706,19 @@ int main(){
 						return 1;
 					} else {
 						for (i = transaksiAwal; i < transaksiAkhir; i++){
-							IDTransaksi(dk, transaksiMhs, i);									//Memberikan nomor ID untuk setiap transaksi
-							inputTanggal(dk, transaksiMhs, i);									//Menginput tanggal untuk masing-masing transaksi
-							tampilkanPosAnggaran(posAnggaranMhs, jmlPos);						//Menampilkan pilihan pos anggaran
-							inputPosAnggaran(dk, transaksiMhs, posAnggaranMhs, i, jmlPos);		//Menginput nominal transaksi
-							cekJenisTransaksi(dk, transaksiMhs, i); 							//Menggolongkan jenis transaksi (pemasukan/pengeluaran)
-							inputNominal(dk, transaksiMhs, i); 									//Menginput nominal masing-masing transaksi
-							deskripsiTransaksi(dk, transaksiMhs, i); 							//Memberikan deskripsi untuk setiap transaksi
+							IDTransaksi(dk, transaksiMhs, i); //Memberikan nomor ID untuk setiap transaksi
+							inputTanggal(dk, transaksiMhs, i); //Menginput tanggal untuk masing-masing transaksi
+							tampilkanPosAnggaran(posAnggaranMhs, jmlPos); //Menampilkan pilihan pos anggaran
+							inputPosAnggaran(dk, transaksiMhs, posAnggaranMhs, i, jmlPos); //Menginput nominal transaksi
+							cekJenisTransaksi(dk, transaksiMhs, i); //Menggolongkan jenis transaksi (pemasukan/pengeluaran)
+							inputNominal(dk, transaksiMhs, i); //Menginput nominal masing-masing transaksi
+							deskripsiTransaksi(dk, transaksiMhs, i); //Memberikan deskripsi untuk setiap transaksi
 						}
 
 					}	
 				fclose(dk);
 				break;
-			case 2: {
+			case 2: { //Menampilkan laporan keuangan
 				//membaca file pos_Anggaran
 				FILE *pa = fopen("pos_Anggaran.txt", "r");
 				if (pa == NULL) {
@@ -753,22 +760,22 @@ int main(){
 				
 				//Perhitungan total nominal masing masing jenis transkasi keuangan
 				for (i = transaksiAwal; i < transaksiAkhir; i++){
-					hitungRealisasiPengeluaran(transaksiMhs, i, posAnggaranMhs, jmlPos); 	//Menghitung realisasi nominal masing-masing pos anggaran
-					jmlTransaksiPos(posAnggaranMhs, jmlPos, transaksiMhs, i); 				//Menghitung jumlah transaksi yang dilakukan oleh masing-masing pos anggaran
-					jumlahTotalPemasukan(transaksiMhs, i, &totalPemasukan);					//Menghitung total nominal pemasukan yang dilakukan
-					jumlahTotalPengeluaran(transaksiMhs, i, &totalPengeluaran);				//Menghitung total nominal pengeluaran yang dilakukan 
-					jumlahTransaksiPemasukan(transaksiMhs, i, &jmlTransaksiMasuk); 			//Menghitung jumlah aktivitas transaski pemasukan
-					jumlahTransaksiPengeluaran(transaksiMhs, i, &jmlTransaksiKeluar); 		//Menghitung jumlah aktivitas transaksi pengeluaran
+					hitungRealisasiPengeluaran(transaksiMhs, i, posAnggaranMhs, jmlPos); //Menghitung realisasi nominal masing-masing pos anggaran
+					jmlTransaksiPos(posAnggaranMhs, jmlPos, transaksiMhs, i); //Menghitung jumlah transaksi yang dilakukan oleh masing-masing pos anggaran
+					jumlahTotalPemasukan(transaksiMhs, i, &totalPemasukan); //Menghitung total nominal pemasukan yang dilakukan
+					jumlahTotalPengeluaran(transaksiMhs, i, &totalPengeluaran); //Menghitung total nominal pengeluaran yang dilakukan 
+					jumlahTransaksiPemasukan(transaksiMhs, i, &jmlTransaksiMasuk); //Menghitung jumlah aktivitas transaski pemasukan
+					jumlahTransaksiPengeluaran(transaksiMhs, i, &jmlTransaksiKeluar); //Menghitung jumlah aktivitas transaksi pengeluaran
 				}
 
-				saldoAkhir = jumlahSaldoAkhir(totalPemasukan, totalPengeluaran); 				//Menghitung saldo akhir
-				rataPengeluaran = rataRataPengeluaran(totalPengeluaran, transaksiAkhir); 			//Menghitung rata-rata Pengeluaran per transaksi
-				persenSisa = persentaseSisa(saldoAkhir, totalPemasukan); 						//Menghitung persentase sisa terhadap pemasukan
-				hitungSisaAnggaran(posAnggaranMhs, jmlPos); 									//Menghitung sisa anggaran berdasarkan berdasarkan batas pengeluaran dari masing-masing pos anggaran
-				cekStatus(posAnggaranMhs, jmlPos); 												//Mengecek status untuk setiap sisa anggaran dari masing-masing pos anggaran
-				cekKondisiTotal(saldoAkhir, kondisiKeuangan); 									//Menentukan kondisi total keuangan mahasiswa
+				saldoAkhir = jumlahSaldoAkhir(totalPemasukan, totalPengeluaran); //Menghitung saldo akhir
+				rataPengeluaran = rataRataPengeluaran(totalPengeluaran, transaksiAkhir); //Menghitung rata-rata Pengeluaran per transaksi
+				persenSisa = persentaseSisa(saldoAkhir, totalPemasukan); //Menghitung persentase sisa terhadap pemasukan
+				hitungSisaAnggaran(posAnggaranMhs, jmlPos); //Menghitung sisa anggaran berdasarkan berdasarkan batas pengeluaran dari masing-masing pos anggaran
+				cekStatus(posAnggaranMhs, jmlPos); //Mengecek status untuk setiap sisa anggaran dari masing-masing pos anggaran
+				cekKondisiTotal(saldoAkhir, kondisiKeuangan); //Menentukan kondisi total keuangan mahasiswa
 	
-				
+				//Pengujian output
 				printf("\nJumlah transaksi dalam 1 bulan : %d\n", transaksiAkhir);
 				for (i = 0; i < transaksiAkhir; i++){
 					if (transaksiMhs[i].ID > 9){
@@ -794,24 +801,29 @@ int main(){
 				printf("\nJumlah transaksi pemasukan : %d", jmlTransaksiMasuk);
 				printf("\nJumlah transaksi pengeluaran : %d", jmlTransaksiKeluar);
 	
-				//Menginput hasil rekapan transaksi keuangan ke dalam file
+				//Menginput hasil rekapan transaksi keuangan ke dalam file Keuangan.txt
 				FILE *fp = fopen("Keuangan.txt", "w");
 				if (fp == NULL) {
    					printf("Gagal membuka file!\n");
     				exit(1);
 				} else {
-					TampilRekap(fp, jmlTransaksiMasuk, jmlTransaksiKeluar, totalPemasukan, totalPengeluaran, saldoAkhir, rataPengeluaran); 	//Menampilkan total pemasukan, total pengeluaran, saldo akhir, dan rata-rata pengeluaran
-					TampilTabel(fp, posAnggaranMhs, jmlPos); 																				//Menampilkan tabel berisi data-data dari variabel struct bertipe posAnggaran
-					printf("Kondisi Keuangan : %s (Sisa %.2f%% dari total pemasukan)", kondisiKeuangan, persenSisa);						//Menampilkan kondisi keuangan di layar
-					fprintf(fp, "Kondisi Keuangan : %s (Sisa %.2f%% dari total pemasukan)", kondisiKeuangan, persenSisa);					//Menampilkan kondisi keuangan di file txt
-					kesimpulanKondisi(fp, saldoAkhir, totalPemasukan); 																		//Menentukan kesimpulan berdasarkan kondisi keuangan mahasiswa 
+					//Menampilkan total pemasukan, total pengeluaran, saldo akhir, dan rata-rata pengeluaran
+					TampilRekap(fp, jmlTransaksiMasuk, jmlTransaksiKeluar, totalPemasukan, totalPengeluaran, saldoAkhir, rataPengeluaran);
+					//Menampilkan tabel berisi data-data dari variabel struct bertipe posAnggaran
+					TampilTabel(fp, posAnggaranMhs, jmlPos);
+					//Menampilkan kondisi keuangan di layar											
+					printf("Kondisi Keuangan : %s (Sisa %.2f%% dari total pemasukan)", kondisiKeuangan, persenSisa);
+					//Menampilkan kondisi keuangan di file txt					
+					fprintf(fp, "Kondisi Keuangan : %s (Sisa %.2f%% dari total pemasukan)", kondisiKeuangan, persenSisa);
+					//Menentukan kesimpulan berdasarkan kondisi keuangan mahasiswa 		
+					kesimpulanKondisi(fp, saldoAkhir, totalPemasukan); 																		
 				}
 				fclose(fp);
-				transaksiAwal = transaksiAkhir;
+				transaksiAwal = transaksiAkhir; //Agar proses perhitungan transaksi selanjutnya tidak mengulang dari awal
 				break;
 			}
 				
-			case 3: {
+			case 3: { //Keluar program dan hapus isi file
 				FILE *pa = fopen("pos_Anggaran.txt", "w");
 				fclose(pa);
 				FILE *dk = fopen("dataKeuangan.txt", "w");
@@ -820,10 +832,10 @@ int main(){
 				break;
 			}
 
-			default:
+			default: //Jika pilihan tidak valid
 				printf("Pilihan tidak valid!\n");
 		}
-	} while (nomorMenu != 3);
+	} while (nomorMenu != 3); //Program akan terus berulang selama tidak memilih nomor 3
 
 	return 0;
 }
