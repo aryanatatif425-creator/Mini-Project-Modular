@@ -590,7 +590,7 @@ void kesimpulanKondisi(FILE *fp, int varSaldoAkhir, int varTotalPemasukan){
 	if (varSaldoAkhir > (0.25 * varTotalPemasukan)){
 		printf("\nKesimpulan	 : Anda termasuk mahasiswa hemat dan produktif.");
 	}
-	if (varSaldoAkhir > 0 && varSaldoAkhir < (0.25 * varTotalPemasukan)){
+	if (varSaldoAkhir > 0 && varSaldoAkhir <= (0.25 * varTotalPemasukan)){
 		printf("\nKesimpulan	 : Keuangan anda seimbang, tetap waspada terhadap pengeluaran tidak perlu.");
 	}
 	if (varSaldoAkhir > (-0.10 * varTotalPemasukan) && varSaldoAkhir <= 0){
@@ -604,7 +604,7 @@ void kesimpulanKondisi(FILE *fp, int varSaldoAkhir, int varTotalPemasukan){
 	if (varSaldoAkhir > (0.25 * varTotalPemasukan)){
 		fprintf(fp, "\nKesimpulan	 : Anda termasuk mahasiswa hemat dan produktif.");
 	}
-	if (varSaldoAkhir > 0 && varSaldoAkhir < (0.25 * varTotalPemasukan)){
+	if (varSaldoAkhir > 0 && varSaldoAkhir <= (0.25 * varTotalPemasukan)){
 		fprintf(fp, "\nKesimpulan	 : Keuangan anda seimbang, tetap waspada terhadap pengeluaran tidak perlu.");
 	}
 	if (varSaldoAkhir > (-0.10 * varTotalPemasukan) && varSaldoAkhir <= 0){
