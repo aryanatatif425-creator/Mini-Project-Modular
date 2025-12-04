@@ -1,0 +1,15 @@
+
+========================================= LAPORAN KEUANGAN BULAN NOVEMBER 2025 =========================================
+Total Pemasukan    (1 Transaksi) : Rp 100000
+Total Pengeluaran  (2 Transaksi) : Rp 75000
+Saldo Akhir             	 : Rp 25000
+Rata - rata pengeluaran 	 : Rp 25000.00 per transaksi
+-------------------------------------------------------------------------------------------------------------------------
+
+POS ANGGARAN
+Pos             | Batas(RP)    | Realisasi(RP) | Jumlah Transaksi | Sisa(Rp) | Status    
+-------------------------------------------------------------------------------------------------------------------------
+makan           | 200000       | 75000         | 2                | 125000    | Aman      
+-------------------------------------------------------------------------------------------------------------------------
+Kondisi Keuangan : Surplus (Sisa 25.00% dari total pemasukan)
+Kesimpulan	 : Keuangan anda seimbang, tetap waspada terhadap pengeluaran tidak perlu.
